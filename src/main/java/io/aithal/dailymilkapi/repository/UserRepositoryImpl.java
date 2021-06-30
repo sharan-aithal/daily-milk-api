@@ -20,6 +20,7 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String SQL_COUNT_BY_EMAIL = "select count(*) from dm_user where email = ?";
     private static final String SQL_FIND_BY_ID = "select user_id, name, email, phone, password " +
             "from dm_user where user_id = ?";
+    private static final String SQL_FIND_BY_EMAIL = "select user_id, name, email, phone, password from dm_user where email = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -48,12 +49,19 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findByEmailAndPassword ( String email, String password ) throws DmAuthException {
-        return null;
+        try {
+            User user = jdbcTemplate.queryForObject ( SQL_FIND_BY_EMAIL, userRowMapper, email );
+            if (!password.equals ( user.getPassword () ))
+                throw new DmAuthException ( "invalid email and password" );
+            return user;
+        } catch (Exception e) {
+            throw new DmAuthException ( "invalid email and password" );
+        }
     }
 
     @Override
     public Integer getCountByEmail ( String email ) {
-        return jdbcTemplate.queryForObject ( SQL_COUNT_BY_EMAIL,Integer.class, email );
+        return jdbcTemplate.queryForObject ( SQL_COUNT_BY_EMAIL, Integer.class, email );
     }
 
     @Override
