@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User validateUser ( String email, String password ) throws DmAuthException {
-        if(email != null) email= email.toLowerCase ();
+        if (email != null) email = email.toLowerCase ();
         return userRepository.findByEmailAndPassword ( email, password );
     }
 

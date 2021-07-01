@@ -58,18 +58,18 @@ public class RiderRepositoryImpl implements RiderRepository {
     public Rider findByPhoneAndPassword ( Long phone, String password ) throws DmAuthException {
         try {
             Rider rider = jdbcTemplate.queryForObject ( SQL_FIND_BY_PHONE, rowMapper, phone );
-            if(!password.equals ( rider.getPassword () ))
+            if (!password.equals ( rider.getPassword () ))
                 throw new DmAuthException ( "invalid phone and password" );
             return rider;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DmAuthException ( "invalid phone and password" );
         }
     }
 
-    private final RowMapper<Rider> rowMapper = (( rs, rowNum) -> {
+    private final RowMapper<Rider> rowMapper = ( ( rs, rowNum ) -> {
         return new Rider ( rs.getInt ( "rider_id" ),
                 rs.getString ( "name" ),
                 rs.getLong ( "phone" ),
-                rs.getString ( "password" ));
-    });
+                rs.getString ( "password" ) );
+    } );
 }

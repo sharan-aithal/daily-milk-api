@@ -1,7 +1,6 @@
 package io.aithal.dailymilkapi.controller;
 
 import io.aithal.dailymilkapi.domain.Rider;
-import io.aithal.dailymilkapi.domain.User;
 import io.aithal.dailymilkapi.service.RiderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class RiderController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String,String>> loginRider(@RequestBody Map<String,Object> riderMap){
+    public ResponseEntity<Map<String, String>> loginRider ( @RequestBody Map<String, Object> riderMap ) {
         Long phone = (Long) riderMap.get ( "phone" );
         String password = (String) riderMap.get ( "password" );
         Rider rider = riderService.validateRider ( phone, password );
