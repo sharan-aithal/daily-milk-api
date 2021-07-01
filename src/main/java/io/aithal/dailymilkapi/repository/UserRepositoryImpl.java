@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -31,6 +32,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Integer create ( String name, String email, Long phone, String password ) throws DmAuthException {
+        String hashedPassword = BCrypt.hashpw ( password, BCrypt.gensalt (10) );
         try {
             KeyHolder keyHolder = new GeneratedKeyHolder ();
             jdbcTemplate.update ( connection -> {
@@ -38,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
                 ps.setString ( 1, name );
                 ps.setString ( 2, email );
                 ps.setLong ( 3, phone );
-                ps.setString ( 4, password );
+                ps.setString ( 4, hashedPassword );
                 return ps;
             }, keyHolder );
             return (Integer) keyHolder.getKeys ().get ( "user_id" );
@@ -51,7 +53,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User findByEmailAndPassword ( String email, String password ) throws DmAuthException {
         try {
             User user = jdbcTemplate.queryForObject ( SQL_FIND_BY_EMAIL, userRowMapper, email );
-            if (!password.equals ( user.getPassword () ))
+            if (!BCrypt.checkpw ( password, user.getPassword () ))
                 throw new DmAuthException ( "invalid email and password" );
             return user;
         } catch (Exception e) {

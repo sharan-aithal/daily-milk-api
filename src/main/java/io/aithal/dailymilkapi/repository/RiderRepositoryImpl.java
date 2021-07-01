@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -29,13 +30,14 @@ public class RiderRepositoryImpl implements RiderRepository {
 
     @Override
     public Integer create ( String name, Long phone, String password ) throws DmAuthException {
+        String hashedPassword = BCrypt.hashpw ( password, BCrypt.gensalt (10) );
         try {
             KeyHolder keyHolder = new GeneratedKeyHolder ();
             jdbcTemplate.update ( connection -> {
                 PreparedStatement ps = connection.prepareStatement ( SQL_CREATE, PreparedStatement.RETURN_GENERATED_KEYS );
                 ps.setString ( 1, name );
                 ps.setLong ( 2, phone );
-                ps.setString ( 3, password );
+                ps.setString ( 3, hashedPassword );
                 return ps;
             }, keyHolder );
             return (Integer) keyHolder.getKeys ().get ( "rider_id" );
@@ -58,7 +60,7 @@ public class RiderRepositoryImpl implements RiderRepository {
     public Rider findByPhoneAndPassword ( Long phone, String password ) throws DmAuthException {
         try {
             Rider rider = jdbcTemplate.queryForObject ( SQL_FIND_BY_PHONE, rowMapper, phone );
-            if (!password.equals ( rider.getPassword () ))
+            if (!BCrypt.checkpw ( password, rider.getPassword () ))
                 throw new DmAuthException ( "invalid phone and password" );
             return rider;
         } catch (Exception e) {
