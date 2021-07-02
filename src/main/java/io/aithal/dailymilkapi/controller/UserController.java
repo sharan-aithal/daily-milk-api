@@ -1,5 +1,8 @@
 package io.aithal.dailymilkapi.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import io.aithal.dailymilkapi.Constant;
 import io.aithal.dailymilkapi.domain.User;
 import io.aithal.dailymilkapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,9 +35,7 @@ public class UserController {
         Long phone = (Long) userMap.get ( "phone" );
         String password = (String) userMap.get ( "password" );
         User user = userService.registerUser ( name, email, phone, password );
-        Map<String, String> map = new HashMap<> ();
-        map.put ( "message", "registered successfully" );
-        return new ResponseEntity<> ( map, HttpStatus.OK );
+        return new ResponseEntity<> ( generateJWT ( user ), HttpStatus.OK );
     }
 
     @PostMapping("/login")
@@ -41,8 +43,21 @@ public class UserController {
         String email = (String) userMap.get ( "email" );
         String password = (String) userMap.get ( "password" );
         User user = userService.validateUser ( email, password );
+        return new ResponseEntity<> ( generateJWT ( user ), HttpStatus.OK );
+    }
+
+    public Map<String, String> generateJWT ( User user ) {
+        long timestamp = System.currentTimeMillis ();
+        String token = JWT.create ()
+                .withIssuer ( Constant.API_ISSUER )
+                .withIssuedAt ( new Date ( timestamp ) )
+                .withExpiresAt ( new Date ( timestamp + Constant.TOKEN_VALIDITY ) )
+                .withClaim ( "userId", user.getUserid () )
+                .withClaim ( "email", user.getEmail () )
+                .withClaim ( "name", user.getName () )
+                .sign ( Algorithm.HMAC256 ( Constant.API_SECRET_KEY ) );
         Map<String, String> map = new HashMap<> ();
-        map.put ( "message", "logged in successfully" );
-        return new ResponseEntity<> ( map, HttpStatus.OK );
+        map.put ( "token", token );
+        return map;
     }
 }
