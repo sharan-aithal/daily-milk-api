@@ -33,7 +33,11 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById ( Integer productId ) throws DmResourceNotFoundException {
-        return jdbcTemplate.queryForObject (SQL_FIND_BY_ID, productRowMapper, productId);
+        try {
+            return jdbcTemplate.queryForObject ( SQL_FIND_BY_ID, productRowMapper, productId );
+        } catch (Exception e) {
+            throw new DmResourceNotFoundException ( "product not found" );
+        }
     }
 
     @Override
@@ -63,10 +67,10 @@ public class ProductRepositoryImpl implements ProductRepository {
         return null;
     }
 
-    private final RowMapper<Product> productRowMapper = (( rs, rowNum) -> {
-        return  new Product ( rs.getInt ( "product_id" ),
+    private final RowMapper<Product> productRowMapper = ( ( rs, rowNum ) -> {
+        return new Product ( rs.getInt ( "product_id" ),
                 rs.getString ( "name" ),
                 rs.getString ( "description" ),
-                rs.getDouble ( "price" ));
-    });
+                rs.getDouble ( "price" ) );
+    } );
 }
