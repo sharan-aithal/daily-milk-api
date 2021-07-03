@@ -1,8 +1,11 @@
 package io.aithal.dailymilkapi.filter;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.aithal.dailymilkapi.Constant;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -27,7 +30,10 @@ public class AuthFilter extends GenericFilterBean {
             if (authHeaderArr.length > 1 && authHeaderArr[1] != null) {
                 String token = authHeaderArr[1];
                 try {
-                    DecodedJWT decodedJWT = JWT.decode ( token );
+                    JWTVerifier verifier = JWT.require( Algorithm.HMAC256 ( Constant.API_SECRET_KEY ))
+                            .withIssuer(Constant.API_ISSUER)
+                            .build();
+                    DecodedJWT decodedJWT = verifier.verify(token);
                     Map<String, Claim> claims = decodedJWT.getClaims ();
                     request.setAttribute ( "userId", Integer.parseInt ( claims.get ( "userId" ).toString () ) );
                 } catch (Exception e) {
