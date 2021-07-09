@@ -24,30 +24,38 @@ public class AuthFilter extends GenericFilterBean {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        String authHeader = request.getHeader ( "Authorization" );
-        if (authHeader != null) {
-            String[] authHeaderArr = authHeader.split ( "Bearer " );
-            if (authHeaderArr.length > 1 && authHeaderArr[1] != null) {
-                String token = authHeaderArr[1];
-                try {
-                    JWTVerifier verifier = JWT.require( Algorithm.HMAC256 ( Constant.API_SECRET_KEY ))
-                            .withIssuer(Constant.API_ISSUER)
-                            .build();
-                    DecodedJWT decodedJWT = verifier.verify(token);
-                    Map<String, Claim> claims = decodedJWT.getClaims ();
-                    request.setAttribute ( "userId", Integer.parseInt ( claims.get ( "userId" ).toString () ) );
-                } catch (Exception e) {
-                    response.sendError ( HttpStatus.FORBIDDEN.value (), "invalid/expired token" );
+        // todo: add more exclusions
+        if (request.getRequestURI ().equals ( "/api/riders/login" ))
+            filterChain.doFilter ( request, response );
+        else {
+            String authHeader = request.getHeader ( "Authorization" );
+            if (authHeader != null) {
+                String[] authHeaderArr = authHeader.split ( "Bearer " );
+                if (authHeaderArr.length > 1 && authHeaderArr[1] != null) {
+                    String token = authHeaderArr[1];
+                    try {
+                        JWTVerifier verifier = JWT.require ( Algorithm.HMAC256 ( Constant.API_SECRET_KEY ) )
+                                .withIssuer ( Constant.API_ISSUER )
+                                .build ();
+                        DecodedJWT decodedJWT = verifier.verify ( token );
+                        Map<String, Claim> claims = decodedJWT.getClaims ();
+                        if (claims.containsKey ( "riderId" ))
+                            request.setAttribute ( "riderId", Integer.parseInt ( claims.get ( "riderId" ).toString () ) );
+                        else
+                            request.setAttribute ( "userId", Integer.parseInt ( claims.get ( "userId" ).toString () ) );
+                    } catch (Exception e) {
+                        response.sendError ( HttpStatus.FORBIDDEN.value (), "invalid/expired token" );
+                        return;
+                    }
+                } else {
+                    response.sendError ( HttpStatus.FORBIDDEN.value (), "Authorization header must be Bearer [token]" );
                     return;
                 }
             } else {
-                response.sendError ( HttpStatus.FORBIDDEN.value (), "Authorization header must be Bearer [token]" );
+                response.sendError ( HttpStatus.FORBIDDEN.value (), "Authorization header must be provided" );
                 return;
             }
-        } else {
-            response.sendError ( HttpStatus.FORBIDDEN.value (), "Authorization header must be provided" );
-            return;
+            filterChain.doFilter ( request, response );
         }
-        filterChain.doFilter ( request, response );
     }
 }
