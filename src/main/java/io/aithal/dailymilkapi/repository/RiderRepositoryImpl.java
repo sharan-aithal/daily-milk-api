@@ -20,6 +20,7 @@ public class RiderRepositoryImpl implements RiderRepository {
     private static final String SQL_COUNT_BY_PHONE = "select count(*) from dm_rider where phone = ?";
     private static final String SQL_FIND_BY_ID = "select rider_id, name, phone, password from dm_rider where rider_id = ?";
     private static final String SQL_FIND_BY_PHONE = "select rider_id, name, phone, password from dm_rider where phone = ?";
+    private static final String SQL_INSERT_PROFILE = "insert into dm_rider_profile(rider_id, name) values (?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -30,7 +31,7 @@ public class RiderRepositoryImpl implements RiderRepository {
 
     @Override
     public Integer create ( String name, Long phone, String password ) throws DmAuthException {
-        String hashedPassword = BCrypt.hashpw ( password, BCrypt.gensalt (10) );
+        String hashedPassword = BCrypt.hashpw ( password, BCrypt.gensalt ( 10 ) );
         try {
             KeyHolder keyHolder = new GeneratedKeyHolder ();
             jdbcTemplate.update ( connection -> {
@@ -40,7 +41,14 @@ public class RiderRepositoryImpl implements RiderRepository {
                 ps.setString ( 3, hashedPassword );
                 return ps;
             }, keyHolder );
-            return (Integer) keyHolder.getKeys ().get ( "rider_id" );
+            Integer riderId = (Integer) keyHolder.getKeys ().get ( "rider_id" );
+            jdbcTemplate.update ( connection -> {
+                PreparedStatement ps = connection.prepareStatement ( SQL_INSERT_PROFILE, PreparedStatement.RETURN_GENERATED_KEYS );
+                ps.setInt ( 1, riderId );
+                ps.setString ( 2, name );
+                return ps;
+            }, keyHolder );
+            return riderId;
         } catch (Exception e) {
             throw new DmAuthException ( "Invalid details, unable to create account" );
         }
