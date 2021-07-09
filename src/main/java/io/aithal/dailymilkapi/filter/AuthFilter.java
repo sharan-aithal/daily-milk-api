@@ -25,7 +25,7 @@ public class AuthFilter extends GenericFilterBean {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         // todo: add more exclusions
-        if (request.getRequestURI ().equals ( "/api/riders/login" ))
+        if (request.getRequestURI ().equals ( "/api/riders/login" ) | request.getRequestURI ().equals ( "/api/riders/register" ))
             filterChain.doFilter ( request, response );
         else {
             String authHeader = request.getHeader ( "Authorization" );
