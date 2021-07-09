@@ -25,9 +25,8 @@ public class AuthFilter extends GenericFilterBean {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         // todo: add more exclusions
-        if (request.getRequestURI ().equals ( "/api/riders/login" ) | request.getRequestURI ().equals ( "/api/riders/register" ))
-            filterChain.doFilter ( request, response );
-        else {
+        if (!( request.getRequestURI ().equals ( "/api/riders/login" ) |
+                request.getRequestURI ().equals ( "/api/riders/register" ) )) {
             String authHeader = request.getHeader ( "Authorization" );
             if (authHeader != null) {
                 String[] authHeaderArr = authHeader.split ( "Bearer " );
@@ -55,7 +54,7 @@ public class AuthFilter extends GenericFilterBean {
                 response.sendError ( HttpStatus.FORBIDDEN.value (), "Authorization header must be provided" );
                 return;
             }
-            filterChain.doFilter ( request, response );
         }
+        filterChain.doFilter ( request, response );
     }
 }
