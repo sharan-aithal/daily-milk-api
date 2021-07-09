@@ -14,11 +14,12 @@ public class DailyMilkApiApplication {
     }
 
     @Bean
-    public FilterRegistrationBean<AuthFilter> filterFilterRegistrationBean() {
+    public FilterRegistrationBean<AuthFilter> filterFilterRegistrationBean ( ) {
         FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<> ();
         AuthFilter authFilter = new AuthFilter ();
         registrationBean.setFilter ( authFilter );
         registrationBean.addUrlPatterns ( "/api/products/*" );
+        registrationBean.addUrlPatterns ( "/api/riders/*" );
         return registrationBean;
     }
 }
