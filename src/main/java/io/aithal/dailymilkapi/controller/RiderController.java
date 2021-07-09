@@ -6,23 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/api/riders")
 public class RiderController {
 
-    private final RiderService riderService;
-
     @Autowired
-    public RiderController ( RiderService riderService ) {
-        this.riderService = riderService;
-    }
+    private RiderProfileService riderProfileService;
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerRider ( @RequestBody Map<String, Object> riderMap ) {
