@@ -23,7 +23,7 @@ public class RiderController {
     @GetMapping("/{riderId}")
     public ResponseEntity<RiderProfile> getRider ( HttpServletRequest request,
                                                    @PathVariable("riderId") Integer riderId ) {
-        RiderProfile rider = riderProfileService.getRiderProfile ( riderId );
+        RiderProfile rider = riderProfileService.fetchRiderProfile ( riderId );
         return new ResponseEntity<> ( rider, HttpStatus.OK );
     }
 

@@ -14,7 +14,7 @@ public class RiderProfileServiceImpl implements RiderProfileService {
     RiderProfileRepository riderProfileRepository;
 
     @Override
-    public RiderProfile getRiderProfile ( Integer riderId ) {
+    public RiderProfile fetchRiderProfile ( Integer riderId ) {
         try {
             return riderProfileRepository.findById ( riderId );
         } catch (Exception e) {
