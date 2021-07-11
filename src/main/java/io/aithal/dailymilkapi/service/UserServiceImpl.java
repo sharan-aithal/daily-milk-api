@@ -1,6 +1,7 @@
 package io.aithal.dailymilkapi.service;
 
 import io.aithal.dailymilkapi.domain.User;
+import io.aithal.dailymilkapi.domain.UserProfile;
 import io.aithal.dailymilkapi.exception.DmAuthException;
 import io.aithal.dailymilkapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +39,16 @@ public class UserServiceImpl implements UserService {
         if (count > 0) throw new DmAuthException ( "Email already in use" );
         Integer userId = userRepository.create ( name, email, phone, password );
         return userRepository.findById ( userId );
+    }
+
+    @Override
+    public UserProfile fetchUserProfile ( Integer userId ) {
+        User user = userRepository.findById ( userId );
+        return userRepository.findByUser ( user );
+    }
+
+    @Override
+    public Integer updateUserProfile ( Integer userId, String name, String address, String city, Integer pinCode ) {
+        return userRepository.updateProfile(userId, name,address,city,pinCode);
     }
 }
