@@ -1,7 +1,8 @@
 package io.aithal.dailymilkapi.controller;
 
-import io.aithal.dailymilkapi.domain.Rider;
+import io.aithal.dailymilkapi.domain.Order;
 import io.aithal.dailymilkapi.domain.RiderProfile;
+import io.aithal.dailymilkapi.service.RiderOrderService;
 import io.aithal.dailymilkapi.service.RiderProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -19,6 +20,9 @@ public class RiderController {
 
     @Autowired
     private RiderProfileService riderProfileService;
+
+    @Autowired
+    private RiderOrderService riderOrderService;
 
     @GetMapping("/{riderId}")
     public ResponseEntity<RiderProfile> getRider ( HttpServletRequest request,
@@ -41,8 +45,17 @@ public class RiderController {
     }
 
     @GetMapping("/{riderId}/orders")
-    public ResponseEntity<Map<String,String>> getOrders ( HttpServletRequest request,
-                                             @PathVariable("riderId") Integer riderId ) {
-        return new ResponseEntity<> ( Collections.emptyMap (), HttpStatus.OK );
+    public ResponseEntity<List<Order>> listOrders ( HttpServletRequest request,
+                                                    @PathVariable("riderId") Integer riderId ) {
+        List<Order> order = riderOrderService.fetchAllOrder ( riderId );
+        return new ResponseEntity<> ( order, HttpStatus.OK );
+    }
+
+    @GetMapping("/{riderId}/orders/{orderId}")
+    public ResponseEntity<Order> getOrder ( HttpServletRequest request,
+                                            @PathVariable("riderId") Integer riderId,
+                                            @PathVariable("orderId") Long orderId ) {
+        Order order = riderOrderService.fetchOrder ( orderId );
+        return new ResponseEntity<> ( order, HttpStatus.OK );
     }
 }
