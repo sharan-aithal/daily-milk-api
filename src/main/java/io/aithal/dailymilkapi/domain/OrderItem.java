@@ -1,16 +1,18 @@
 package io.aithal.dailymilkapi.domain;
 
+import java.util.List;
+
 public class OrderItem {
     private Integer itemId;
-    private Long itemNum;
     private Double totalPrice;
     private Integer userId;
+    private List<Item> items;
 
-    public OrderItem ( Integer itemId, Long itemNum, Double totalPrice, Integer userId ) {
+    public OrderItem ( Integer itemId, Double totalPrice, Integer userId, List<Item> items ) {
         this.itemId = itemId;
-        this.itemNum = itemNum;
         this.totalPrice = totalPrice;
         this.userId = userId;
+        this.items = items;
     }
 
     public Integer getItemId ( ) {
@@ -19,14 +21,6 @@ public class OrderItem {
 
     public void setItemId ( Integer itemId ) {
         this.itemId = itemId;
-    }
-
-    public Long getItemNum ( ) {
-        return itemNum;
-    }
-
-    public void setItemNum ( Long itemNum ) {
-        this.itemNum = itemNum;
     }
 
     public Double getTotalPrice ( ) {
@@ -43,5 +37,13 @@ public class OrderItem {
 
     public void setUserId ( Integer userId ) {
         this.userId = userId;
+    }
+
+    public List<Item> getItems ( ) {
+        return items;
+    }
+
+    public void setItems ( List<Item> items ) {
+        this.items = items;
     }
 }
