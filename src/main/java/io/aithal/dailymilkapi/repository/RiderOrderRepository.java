@@ -20,4 +20,16 @@ public interface RiderOrderRepository {
     List<OrderItem> findAllOrderItem ( Integer itemId );
 
     List<Item> findAllItem ( Long itemNum );
+
+    List<Order> findAllCompletedOrder ( Integer riderId );
+
+    List<Order> findAllActiveOrder ( Integer riderId );
+
+    Long findItemNumByItemId ( Integer itemId, Integer userId );
+
+    List<Long> findAllItemNumByItemId ( Integer itemId, Integer userId );
+
+    Item findItemByItemNum ( Integer itemNum );
+
+    List<Item> findAllItemByItemId ( Integer itemNum, Integer userId );
 }
