@@ -58,4 +58,18 @@ public class RiderController {
         Order order = riderOrderService.fetchOrder ( orderId );
         return new ResponseEntity<> ( order, HttpStatus.OK );
     }
+
+    @GetMapping("/{riderId}/orders/completed")
+    public ResponseEntity<List<Order>> listOfCompletedOrders ( HttpServletRequest request,
+                                                               @PathVariable("riderId") Integer riderId ) {
+        List<Order> order = riderOrderService.fetchAllCompletedOrder ( riderId );
+        return new ResponseEntity<> ( order, HttpStatus.OK );
+    }
+
+    @GetMapping("/{riderId}/orders/active")
+    public ResponseEntity<List<Order>> listOfActiveOrders ( HttpServletRequest request,
+                                                            @PathVariable("riderId") Integer riderId ) {
+        List<Order> order = riderOrderService.fetchAllActiveOrder ( riderId );
+        return new ResponseEntity<> ( order, HttpStatus.OK );
+    }
 }
