@@ -35,8 +35,6 @@ public class AuthController {
         Long phone = (Long) riderMap.get ( "phone" );
         String password = (String) riderMap.get ( "password" );
         Rider rider = riderService.registerRider ( name, phone, password );
-        Map<String, String> map = new HashMap<> ();
-        map.put ( "message", "registered successfully" );
         return new ResponseEntity<> ( generateRiderJWT ( rider ), HttpStatus.OK );
     }
 
@@ -78,6 +76,7 @@ public class AuthController {
                 .sign ( Algorithm.HMAC256 ( Constant.API_SECRET_KEY ) );
         Map<String, String> map = new HashMap<> ();
         map.put ( "token", token );
+        map.put ( "user_id", user.getUserid ().toString () );
         return map;
     }
 
