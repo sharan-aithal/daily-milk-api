@@ -3,20 +3,33 @@ package io.aithal.dailymilkapi.domain;
 public class Order {
     private Long orderId;
     private Integer orderItemId;
-    private Long createdAt;
+    private OrderItem orderItem;
     private Integer totalItem;
     private Double totalPrice;
-    private Integer userId;
+    private UserProfile userProfile;
+    private Long createdAt;
     private Boolean delivered;
+    private Delivery delivery;
 
-    public Order ( Long orderId, Integer orderItemId, Long createdAt, Integer totalItem, Double totalPrice, Integer userId, Boolean delivered ) {
+    public Order ( Long orderId, Integer orderItemId, Integer totalItem, Double totalPrice, Long createdAt, Boolean delivered ) {
         this.orderId = orderId;
         this.orderItemId = orderItemId;
-        this.createdAt = createdAt;
         this.totalItem = totalItem;
         this.totalPrice = totalPrice;
-        this.userId = userId;
+        this.createdAt = createdAt;
         this.delivered = delivered;
+    }
+
+    public Order ( Long orderId, Integer orderItemId, OrderItem orderItem, Integer totalItem, Double totalPrice, UserProfile userProfile, Long createdAt, Boolean delivered, Delivery delivery ) {
+        this.orderId = orderId;
+        this.orderItemId = orderItemId;
+        this.orderItem = orderItem;
+        this.totalItem = totalItem;
+        this.totalPrice = totalPrice;
+        this.userProfile = userProfile;
+        this.createdAt = createdAt;
+        this.delivered = delivered;
+        this.delivery = delivery;
     }
 
     public Long getOrderId ( ) {
@@ -35,6 +48,14 @@ public class Order {
         this.orderItemId = orderItemId;
     }
 
+    public OrderItem getOrderItem ( ) {
+        return orderItem;
+    }
+
+    public void setOrderItem ( OrderItem orderItem ) {
+        this.orderItem = orderItem;
+    }
+
     public Integer getTotalItem ( ) {
         return totalItem;
     }
@@ -51,20 +72,12 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public Integer getUserId ( ) {
-        return userId;
+    public UserProfile getUserProfile ( ) {
+        return userProfile;
     }
 
-    public void setUserId ( Integer userId ) {
-        this.userId = userId;
-    }
-
-    public Boolean getDelivered ( ) {
-        return delivered;
-    }
-
-    public void setDelivered ( Boolean delivered ) {
-        this.delivered = delivered;
+    public void setUserProfile ( UserProfile userProfile ) {
+        this.userProfile = userProfile;
     }
 
     public Long getCreatedAt ( ) {
@@ -75,13 +88,58 @@ public class Order {
         this.createdAt = createdAt;
     }
 
+    public Boolean getDelivered ( ) {
+        return delivered;
+    }
+
+    public void setDelivered ( Boolean delivered ) {
+        this.delivered = delivered;
+    }
+
+    public Delivery getDelivery ( ) {
+        return delivery;
+    }
+
+    public void setDelivery ( Delivery delivery ) {
+        this.delivery = delivery;
+    }
+
 
     public static class Delivery {
 
-        private String deliveredAt;
-        private String status;
+        private Long deliveredAt;
+        private Boolean status;
+        private String failedMessage;
 
-        public Delivery ( ) {
+        public Delivery ( Long deliveredAt, Boolean status, String failedMessage ) {
+            this.deliveredAt = deliveredAt;
+            this.status = status;
+            this.failedMessage = failedMessage;
         }
+
+        public Long getDeliveredAt ( ) {
+            return deliveredAt;
+        }
+
+        public void setDeliveredAt ( Long deliveredAt ) {
+            this.deliveredAt = deliveredAt;
+        }
+
+        public Boolean getStatus ( ) {
+            return status;
+        }
+
+        public void setStatus ( Boolean status ) {
+            this.status = status;
+        }
+
+        public String getFailedMessage ( ) {
+            return failedMessage;
+        }
+
+        public void setFailedMessage ( String failedMessage ) {
+            this.failedMessage = failedMessage;
+        }
+
     }
 }
