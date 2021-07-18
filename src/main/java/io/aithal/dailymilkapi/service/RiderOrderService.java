@@ -12,14 +12,7 @@ public interface RiderOrderService {
 
     Order fetchOrder ( Long orderId );
 
-    List<Order> fetchAllOrderByUser ( Integer userId );
+    List<Order> fetchAllCompletedOrder ( Integer riderId );
 
-    List<Order> fetchAllOrderByCity ( String city );
-
-    List<Order> fetchDeliveredOrder ( Boolean delivered );
-
-    List<OrderItem> fetchAllOrderItem ( Integer itemId );
-
-    List<Item> fetchAllItem ( Long itemNum );
-
+    List<Order> fetchAllActiveOrder ( Integer riderId );
 }

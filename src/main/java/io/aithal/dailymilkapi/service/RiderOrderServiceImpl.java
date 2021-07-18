@@ -23,7 +23,7 @@ public class RiderOrderServiceImpl implements RiderOrderService {
 
     @Override
     public List<Order> fetchAllOrder ( Integer riderId ) {
-        return riderOrderRepository.findAllOrder (riderId);
+        return riderOrderRepository.findAllOrder ( riderId );
     }
 
     @Override
@@ -32,27 +32,12 @@ public class RiderOrderServiceImpl implements RiderOrderService {
     }
 
     @Override
-    public List<Order> fetchAllOrderByUser ( Integer userId ) {
-        return riderOrderRepository.findOrderByUserId ( userId );
+    public List<Order> fetchAllCompletedOrder ( Integer riderId ) {
+        return riderOrderRepository.findAllCompletedOrder ( riderId );
     }
 
     @Override
-    public List<Order> fetchAllOrderByCity ( String city ) {
-        return riderOrderRepository.findAllOrderByCity ( city );
-    }
-
-    @Override
-    public List<Order> fetchDeliveredOrder ( Boolean delivered ) {
-        return riderOrderRepository.findDelivered ( delivered );
-    }
-
-    @Override
-    public List<OrderItem> fetchAllOrderItem ( Integer itemId ) {
-        return riderOrderRepository.findAllOrderItem ( itemId );
-    }
-
-    @Override
-    public List<Item> fetchAllItem ( Long itemNum ) {
-        return riderOrderRepository.findAllItem (itemNum);
+    public List<Order> fetchAllActiveOrder ( Integer riderId ) {
+        return riderOrderRepository.findAllActiveOrder ( riderId );
     }
 }
