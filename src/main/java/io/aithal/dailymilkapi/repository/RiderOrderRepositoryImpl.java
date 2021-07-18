@@ -84,31 +84,6 @@ public class RiderOrderRepositoryImpl implements RiderOrderRepository {
     }
 
     @Override
-    public List<Order> findOrderByUserId ( Integer userId ) {
-        return null;
-    }
-
-    @Override
-    public List<Order> findAllOrderByCity ( String city ) {
-        return null;
-    }
-
-    @Override
-    public List<Order> findDelivered ( Boolean delivered ) {
-        return null;
-    }
-
-    @Override
-    public List<OrderItem> findAllOrderItem ( Integer itemId ) {
-        return null;
-    }
-
-    @Override
-    public List<Item> findAllItem ( Long itemNum ) {
-        return null;
-    }
-
-    @Override
     public List<Order> findAllCompletedOrder ( Integer riderId ) {
         return jdbcTemplate.query ( SQL_FIND_COMPLETED_BY_ID, allOrderResultSet, riderId );
     }
@@ -116,11 +91,6 @@ public class RiderOrderRepositoryImpl implements RiderOrderRepository {
     @Override
     public List<Order> findAllActiveOrder ( Integer riderId ) {
         return jdbcTemplate.query ( SQL_FIND_ACTIVE_BY_ID, allOrderResultSet, riderId );
-    }
-
-    @Override
-    public Long findItemNumByItemId ( Integer itemId, Integer userId ) {
-        return null;
     }
 
     @Override
